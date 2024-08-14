@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@300&family=Dosis:wght@300&family=Forum&family=Parisienne&display=swap"
+    rel="stylesheet"
+  />
+
+    <title>Ma Liste d'Achats</title>
+    <style>
+        body {
+          position: absolute;
+   top: 10%;
+   left: 43%;
+   font-size: 23px;
+   font-family: 'Cormorant Upright', serif;  
+   background-color: #faf0e6;
+     color: white;
+     box-sizing:border-box;
+     margin: 0%; padding: 0;
+ transition:all 0.5s cubic-bezier(.43,1.1,.62,1.08);
+ text-transform: capitalize;
+        }
+   
+        .container {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); 
+        }
+
+        h2 { 
+          font-weight: bold;
+              color: #495057;
+              box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+         
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            color: #495057;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); 
+            font-weight: bold;
+        }
+
+        input {
+            padding: 10px;
+            margin: 7px 2px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        li {
+            border: 1px solid #dee2e6;
+            margin-top: -1px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            text-decoration: none;
+            font-size: 16px;
+            color: #495057;
+            display: block;
+            transition: 0.3s;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        li:hover {
+            background-color: #e9ecef;
+        }
+
+        
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-create {
+            background-color: #c2a789; 
+            color: #fff;
+            padding: 12px 20px;
+            font-size: 20px;
+            border: none;
+            position: relative;
+            left: 45px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-family: 'Cormorant Upright', serif; 
+        }
+
+        .btn-create:hover {
+           
+            font-family: 'Cormorant Upright', serif; 
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+
+        }
+    </style>
+</head> 
+<body>
+  {% block content %}
+  <h2>Liste des fournisseurs</h2> <br>
+  <label for="filterNom">Filtrer par nom:</label>
+  <input type="text" id="filterNom" onkeyup="filterFournisseurs()" placeholder="Entrez le nom du fournisseur">
+<br> 
+  <label for="filterPrenom">Filtrer par prénom:</label>
+  <input type="text" id="filterPrenom" onkeyup="filterFournisseurs()" placeholder="Entrez le prénom du fournisseur">
+<br>
+  <label for="filterTel">Filtrer par numéro de téléphone:</label>
+  <input type="tel" id="filterTel" onkeyup="filterFournisseurs()" placeholder="Entrez le numéro de téléphone du fournisseur">
+<br>
+  <label for="filterAdresse">Filtrer par adresse:</label>
+  <input type="text" id="filterAdresse" onkeyup="filterFournisseurs()" placeholder="Entrez l'adresse du fournisseur">
+<br>
+  <label for="filterSolde">Filtrer par solde:</label>
+  <input type="number" id="filterSolde" onkeyup="filterFournisseurs()" placeholder="Entrez le solde du fournisseur">
+<br>
+  <ul id="fournisseurList">
+    {% for fournisseur in fournisseurs %}
+      <li data-nom="{{ fournisseur.NomF }}" data-prenom="{{ fournisseur.PrenomF }}" data-tel="{{ fournisseur.TelF }}" data-adresse="{{ fournisseur.AdressF }}" data-solde="{{ fournisseur.SoldeF }}">
+        <a href="{% url 'fournisseur_detail' fournisseur.codeF %}">{{ fournisseur.NomF }} - {{ fournisseur.PrenomF }} - {{ fournisseur.TelF }} - {{ fournisseur.AdressF }} - {{ fournisseur.SoldeF }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <a  class="btn-create" href="{% url 'fournisseur_create' %}">Créer</a>
+
+  <script>
+    function filterFournisseurs() {
+      var inputNom, inputPrenom, inputTel, inputAdresse, inputSolde, filterNom, filterPrenom, filterTel, filterAdresse, filterSolde, ul, li, a, i, txtValue;
+
+      inputNom = document.getElementById('filterNom');
+      inputPrenom = document.getElementById('filterPrenom');
+      inputTel = document.getElementById('filterTel');
+      inputAdresse = document.getElementById('filterAdresse');
+      inputSolde = document.getElementById('filterSolde');
+
+      filterNom = inputNom.value.toUpperCase();
+      filterPrenom = inputPrenom.value.toUpperCase();
+      filterTel = inputTel.value.toUpperCase();
+      filterAdresse = inputAdresse.value.toUpperCase();
+      filterSolde = inputSolde.value.toUpperCase();
+
+      ul = document.getElementById('fournisseurList');
+      li = ul.getElementsByTagName('li');
+
+      for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName('a')[0];
+        txtValue = a.textContent || a.innerText;
+
+        var nomMatch = li[i].dataset.nom.toUpperCase().indexOf(filterNom) > -1;
+        var prenomMatch = li[i].dataset.prenom.toUpperCase().indexOf(filterPrenom) > -1;
+        var telMatch = li[i].dataset.tel.toUpperCase().indexOf(filterTel) > -1;
+        var adresseMatch = li[i].dataset.adresse.toUpperCase().indexOf(filterAdresse) > -1;
+        var soldeMatch = li[i].dataset.solde.toUpperCase().indexOf(filterSolde) > -1;
+
+        if (nomMatch && prenomMatch && telMatch && adresseMatch && soldeMatch) {
+          li[i].style.display = '';
+        } else {
+          li[i].style.display = 'none';
+        }
+      }
+    }
+  </script>
+{% endblock %}
+</body>
+</html>

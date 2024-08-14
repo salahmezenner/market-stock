@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Employé</title>
+    {% load static %}
+</head>
+<body>
+
+<p>{{ employee.id }}</p>
+<p>{{ employee.nom }}</p>
+<p>{{ employee.prenom }}</p>
+<p>{{ employee.adresse }}</p>
+<p>{{ employee.telephone }}</p>
+<p>{{ employee.numC }}</p>
+<a class="btn-create" href="{% url 'EmployeEdit' id=employee.id %}">Edit</a>
+<a href="{% url 'EmployeDelete' id=employee.id %}">Supprimer</a>
+</body>
+</html>

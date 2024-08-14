@@ -1,0 +1,59 @@
+{% block content %}
+  <h2>Liste des ventes</h2>
+  <label for="filterProduit">Filtrer par produit:</label>
+  <input type="text" id="filterProduit" onkeyup="filterVentes()" placeholder="Entrez le nom du produit">
+
+  <label for="filterClient">Filtrer par client:</label>
+  <input type="text" id="filterClient" onkeyup="filterVentes()" placeholder="Entrez le nom du client">
+
+  <label for="filterDate">Filtrer par date:</label>
+  <input type="text" id="filterDate" onkeyup="filterVentes()" placeholder="Entrez la date de vente">
+
+  <label for="filterPrixTotale">Filtrer par prix total:</label>
+  <input type="number" id="filterPrixTotale" onkeyup="filterVentes()" placeholder="Entrez le prix total de la vente">
+
+  <ul id="venteList">
+    {% for vente in ventes %}
+      <li data-produit="{{ vente.stock.NomP }}" data-client="{{ vente.client.NomC }}" data-date="{{ vente.dateVente }}" data-prix-totale="{{ vente.prixTotale }}">
+        <a href="{% url 'vente_details_detail' id=vente.id %}">{{ vente.stock.NomP }} - {{ vente.client.NomC }} - {{ vente.dateVente }} - {{ vente.prixTotale }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <a href="{% url 'vente_details_create' %}">Créer</a>
+
+  <script>
+    function filterVentes() {
+      var inputProduit, inputClient, inputDate, inputPrixTotale, filterProduit, filterClient, filterDate, filterPrixTotale, ul, li, a, i, txtValue;
+
+      inputProduit = document.getElementById('filterProduit');
+      inputClient = document.getElementById('filterClient');
+      inputDate = document.getElementById('filterDate');
+      inputPrixTotale = document.getElementById('filterPrixTotale');
+
+      filterProduit = inputProduit.value.toUpperCase();
+      filterClient = inputClient.value.toUpperCase();
+      filterDate = inputDate.value.toUpperCase();
+      filterPrixTotale = inputPrixTotale.value.toUpperCase();
+
+      ul = document.getElementById('venteList');
+      li = ul.getElementsByTagName('li');
+
+      for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName('a')[0];
+        txtValue = a.textContent || a.innerText;
+
+        var produitMatch = txtValue.toUpperCase().indexOf(filterProduit) > -1;
+        var clientMatch = li[i].dataset.client.toUpperCase().indexOf(filterClient) > -1;
+        var dateMatch = li[i].dataset.date.toUpperCase().indexOf(filterDate) > -1;
+        var prixTotaleMatch = li[i].dataset.prixTotale.toUpperCase().indexOf(filterPrixTotale) > -1;
+
+        if (produitMatch && clientMatch && dateMatch && prixTotaleMatch) {
+          li[i].style.display = '';
+        } else {
+          li[i].style.display = 'none';
+        }
+      }
+    }
+  </script>
+{% endblock %}

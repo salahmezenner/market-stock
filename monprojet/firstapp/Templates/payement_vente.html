@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payement Vente</title>
+</head>
+<body>
+    
+    <div>
+        <h2>PayementVente</h2>
+        <form method="post" action="{% url 'payementvente' %}">
+            {% csrf_token %}
+            {{ payementvente.as_p }}
+            <input type="submit" name="effectuer" value="effectuer">
+        </form>
+        {% if solde %}
+            <p>le reste a payé est : {{ solde }}</p>
+        {% endif %}
+        {% if prixbool%}
+        <p> solde plus moins que le montant</p>
+        {%endif%}
+    </div>
+
+</body>
+</html>

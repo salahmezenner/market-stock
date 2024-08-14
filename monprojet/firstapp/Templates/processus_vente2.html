@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Processus de vente</title>
+    {% load static %}
+</head>
+<body>
+    <div>
+        <h2>Vente</h2>
+        <form method="post" action="{% url 'vente2' %}">
+            {% csrf_token %}
+            {{ vente_form.as_p }}
+            <input type="submit" name="calculer_vente" value="Calculer">
+            <input type="submit" name="vendre" value="Vendre">
+        </form>
+        
+        {% if prix_vente %}
+            <p>Prix Total Calculé (Vente): {{ prix_vente }}</p>
+        {% endif %}
+       
+        {% if not quantitebool %}
+        <p>Stock insufisant</p>
+        {% endif %}
+
+    </div>
+</body>
+</html>

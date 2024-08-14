@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Top clients</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+<body>
+    <h1>Top 5 clients</h1>
+    <div id="topclientsChart"></div>
+
+    <script>
+        var topclientsData = JSON.parse('{{ top_clients_json|safe }}');
+
+        var clientsLabels = topclientsData.map(item => item.client__NomC);
+        var montantsventes = topclientsData.map(item => item.total_ventes);
+
+        // Set up the width and height of the chart container
+        var width = 400;
+        var height = 400;
+        var radius = Math.min(width, height) / 2;
+
+        // Create a color scale
+        var color = d3.scaleOrdinal()
+            .range(['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff']);
+
+        // Create the pie chart using D3.js
+        var pie = d3.pie()
+            .sort(null)
+            .value(function(d) { return d; });
+
+        var arc = d3.arc()
+            .outerRadius(radius - 10)
+            .innerRadius(0);
+
+        var svg = d3.select("#topclientsChart")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+        var g = svg.selectAll(".arc")
+            .data(pie(montantsventes))
+            .enter().append("g")
+            .attr("class", "arc");
+
+        g.append("path")
+            .attr("d", arc)
+            .style("fill", function(d, i) { return color(i); });
+
+        // Optionally, you can add labels to the chart
+        g.append("text")
+            .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+            .attr("dy", ".35em")
+            .style("text-anchor", "middle")
+            .text(function(d, i) { return clientsLabels[i]; });
+    </script>
+</body>
+
+
+</html>

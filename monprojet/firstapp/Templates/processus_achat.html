@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Processus d'Achat</title>
+    {% load static %}
+</head>
+<body>
+    <div>
+        <h2>Achat</h2>
+        <form method="post" action="{% url 'achat' %}">
+            {% csrf_token %}
+            {{ achat_form.as_p }}
+            <input type="submit" name="calculer_achat" value="Calculer">
+            <input type="submit" name="acheter" value="Acheter">
+        </form>
+        
+        {% if prix_totale %}
+            <p>Prix Total Calculé (Achat): {{ prix_totale }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>

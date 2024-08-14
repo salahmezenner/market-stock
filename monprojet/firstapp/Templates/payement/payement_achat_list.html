@@ -1,0 +1,52 @@
+{% block content %}
+  <h2>Liste des paiements d'achats</h2>
+  <label for="filterFournisseur">Filtrer par fournisseur:</label>
+  <input type="text" id="filterFournisseur" onkeyup="filterPayments()" placeholder="Entrez le nom du fournisseur">
+
+  <label for="filterMontant">Filtrer par montant payé:</label>
+  <input type="number" id="filterMontant" onkeyup="filterPayments()" placeholder="Entrez le montant payé">
+
+  <label for="filterDate">Filtrer par date de paiement:</label>
+  <input type="text" id="filterDate" onkeyup="filterPayments()" placeholder="Entrez la date de paiement">
+
+  <ul id="paymentList">
+    {% for payment in payments %}
+      <li data-fournisseur="{{ payment.fournisseur.NomF }}" data-montant="{{ payment.montantPaye }}" data-date="{{ payment.datePayement }}">
+        <a href="{% url 'payment_achat_detail' id=payment.id %}">{{ payment.fournisseur.NomF }} - {{ payment.montantPaye }} - {{ payment.datePayement }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <a href="{% url 'payment_achat_create' %}">Créer</a>
+  <script>
+    function filterPayments() {
+      var inputFournisseur, inputMontant, inputDate, filterFournisseur, filterMontant, filterDate, ul, li, a, i, txtValue;
+
+      inputFournisseur = document.getElementById('filterFournisseur');
+      inputMontant = document.getElementById('filterMontant');
+      inputDate = document.getElementById('filterDate');
+
+      filterFournisseur = inputFournisseur.value.toUpperCase();
+      filterMontant = inputMontant.value.toUpperCase();
+      filterDate = inputDate.value.toUpperCase();
+
+      ul = document.getElementById('paymentList');
+      li = ul.getElementsByTagName('li');
+
+      for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName('a')[0];
+        txtValue = a.textContent || a.innerText;
+
+        var fournisseurMatch = li[i].dataset.fournisseur.toUpperCase().indexOf(filterFournisseur) > -1;
+        var montantMatch = li[i].dataset.montant.toUpperCase().indexOf(filterMontant) > -1;
+        var dateMatch = li[i].dataset.date.toUpperCase().indexOf(filterDate) > -1;
+
+        if (fournisseurMatch && montantMatch && dateMatch) {
+          li[i].style.display = '';
+        } else {
+          li[i].style.display = 'none';
+        }
+      }
+    }
+  </script>
+{% endblock %}

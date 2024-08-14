@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Liste des Employés</title>
+    {% load static %}
+</head>
+<body>
+    <h2>Liste des Employés</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>adresse</th>
+                <th>telephone</th>
+                <th>Centre</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employe in employes %}
+                <tr>
+                    <td><a href="{% url 'afficheEmployee' id=employe.id%}">{{ employe.id }}</a></td>
+                    <td><a href="{% url 'afficheEmployee' id=employe.id%}">{{ employe.nom }}</a></td>
+                    <td><a href="{% url 'afficheEmployee' id=employe.id%}">{{ employe.prenom }}</a></td>
+                    <td><a href="{% url 'afficheEmployee' id=employe.id%}">{{ employe.adresse }}</a></td>
+                    <td><a href="{% url 'afficheEmployee' id=employe.id%}">{{ employe.telephone }}</a></td>
+                    <td><a href="{% url 'afficheEmployee' id=employe.id%}">{{ employe.numC }}</a></td>
+                    <td><a href="{% url 'afficheEmployee' id=employe.id%}">{{ employe.salaire_mois }}</a></td>
+                </tr>
+            </a>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'EmployeCreate' %}">Créer</a>
+</body>
+</html>

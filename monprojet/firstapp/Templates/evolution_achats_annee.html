@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Évolution des achats</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Évolution des achats pour l'année {{ annee }}</h1>
+    <canvas id="evolutionChart" width="600" height="200"></canvas>
+
+    <script>
+        var moisLabels = JSON.parse('{{ mois_labels_json|safe }}');
+        var achatsEvolution = JSON.parse('{{ achats_evolution_json|safe }}');
+
+        var ctx = document.getElementById('evolutionChart').getContext('2d');
+        var evolutionChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: moisLabels,
+                datasets: [{
+                    label: 'Total des achats',
+                    data: achatsEvolution,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

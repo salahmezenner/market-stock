@@ -1,0 +1,11 @@
+{% block content %}
+  <h2>Détails de la vente</h2>
+  <p>Stock: {{ vente.stock.NomP }}</p>
+  <p>Client: {{ vente.client.NomC }}</p>
+  <p>Date de vente: {{ vente.dateVente }}</p>
+  <p>Quantité: {{ vente.quantite }}</p>
+  <p>Prix total: {{ vente.prixTotale }}</p>
+
+  <a href="{% url 'vente_details_edit' id=vente.id %}">Editer</a>  
+  <a href="{% url 'vente_details_delete' id=vente.id %}">Supprimer</a>
+{% endblock %}

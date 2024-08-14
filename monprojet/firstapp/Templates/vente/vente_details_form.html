@@ -1,0 +1,11 @@
+{% block content %}
+  <h2>Créer/Modifier une vente</h2>
+  <form method="post" action="">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Enregistrer</button>
+  </form>
+  {% if not quantitebool %}
+  <p>Stock insufisant</p>
+  {% endif %}
+{% endblock %}

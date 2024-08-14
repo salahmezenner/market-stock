@@ -1,0 +1,9 @@
+{% block content %}
+  <h2>Détails du paiement de vente</h2>
+  <p>Client: {{ payement.client.NomC }}</p>
+  <p>Montant payé: {{ payement.montantPaye }}</p>
+  <p>Date de paiement: {{ payement.datePayement }}</p>
+
+  <a href="{% url 'payement_vente_edit' id=payement.id %}">Editer</a>  
+  <a href="{% url 'payement_vente_delete' id=payement.id %}">Supprimer</a>
+{% endblock %}

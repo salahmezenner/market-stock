@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@300&family=Dosis:wght@300&family=Forum&family=Parisienne&display=swap"
+    rel="stylesheet"
+  />
+
+    <title>Ma Liste d'Achats</title>
+    <style>
+        body {
+          position: absolute;
+   top: 10%;
+   left: 43%;
+   font-size: 23px;
+   font-family: 'Cormorant Upright', serif;  
+   background-color: #faf0e6;
+     color: white;
+     box-sizing:border-box;
+     margin: 0%; padding: 0;
+ transition:all 0.5s cubic-bezier(.43,1.1,.62,1.08);
+ text-transform: capitalize;
+        }
+   
+        .container {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); 
+        }
+
+        h2 { 
+         
+              color: #495057;
+              box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+         
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            color: #495057;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        input {
+            padding: 10px;
+            margin: 7px 2px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        li {
+            border: 1px solid #dee2e6;
+            margin-top: -1px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            text-decoration: none;
+            font-size: 16px;
+            color: #495057;
+            display: block;
+            transition: 0.3s;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        li:hover {
+            background-color: #e9ecef;
+        }
+
+        
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-create {
+            background-color: #c2a789; 
+            color: #fff;
+            padding: 12px 20px;
+            font-size: 20px;
+            border: none;
+            position: relative;
+            left: 45px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-family: 'Cormorant Upright', serif; 
+        }
+
+        .btn-create:hover {
+           
+            font-family: 'Cormorant Upright', serif; 
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+
+        }
+    </style>
+</head> 
+<body>
+{% block content %} 
+<div>  
+  <b><h2>Liste des achats</h2>  </b>   </div>
+  <br> 
+
+
+  <b> <label for="filterProduit">Filtrer par produit:</label></b>
+  <input type="text" id="filterProduit" onkeyup="filterAchats()" placeholder="Entrez le nom du produit">
+<br>
+<b> <label for="filterFournisseur">Filtrer par fournisseur:</label> </b>
+  <input type="text" id="filterFournisseur" onkeyup="filterAchats()" placeholder="Entrez le nom du fournisseur">
+<br>
+<b> <label for="filterDate">Filtrer par date:</label> </b>
+  <input type="text" id="filterDate" onkeyup="filterAchats()" placeholder="Entrez la date d'achat">
+  <br>
+  <b> <label for="filterID">Filtrer par ID:</label></b>
+  <input type="number" id="filterID" onkeyup="filterAchats()" placeholder="Entrez l'ID de l'achat">
+  <br>
+  <b> <label for="filterPrixTotale">Filtrer par prix total:</label> </b>
+  <input type="number" id="filterPrixTotale" onkeyup="filterAchats()" placeholder="Entrez le prix total de l'achat">
+  <br>
+  <ul id="achatList">
+    {% for achat in achats %}
+      <li data-produit="{{ achat.stock.NomP }}" data-fournisseur="{{ achat.fournisseur.NomF }}" data-date="{{ achat.dateAchat }}" data-id="{{ achat.id }}" data-prix-totale="{{ achat.prixTotale }}">
+        <a href="{% url 'achat_details_detail' id=achat.id %}">{{ achat.stock.NomP }} - {{ achat.fournisseur.NomF }} - {{ achat.dateAchat }} - {{ achat.id }} - {{ achat.prixTotale }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <a class="btn-create" href="{% url 'achat_details_create' %}">Créer</a>
+
+  <script>
+    function filterAchats() {
+      var inputProduit, inputFournisseur, inputDate, inputID, inputPrixTotale, filterProduit, filterFournisseur, filterDate, filterID, filterPrixTotale, ul, li, a, i, txtValue;
+
+      inputProduit = document.getElementById('filterProduit');
+      inputFournisseur = document.getElementById('filterFournisseur');
+      inputDate = document.getElementById('filterDate');
+      inputID = document.getElementById('filterID');
+      inputPrixTotale = document.getElementById('filterPrixTotale');
+
+      filterProduit = inputProduit.value.toUpperCase();
+      filterFournisseur = inputFournisseur.value.toUpperCase();
+      filterDate = inputDate.value.toUpperCase();
+      filterID = inputID.value.toUpperCase();
+      filterPrixTotale = inputPrixTotale.value.toUpperCase();
+
+      ul = document.getElementById('achatList');
+      li = ul.getElementsByTagName('li');
+
+      for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName('a')[0];
+        txtValue = a.textContent || a.innerText;
+
+        var produitMatch = txtValue.toUpperCase().indexOf(filterProduit) > -1;
+        var fournisseurMatch = li[i].dataset.fournisseur.toUpperCase().indexOf(filterFournisseur) > -1;
+        var dateMatch = li[i].dataset.date.toUpperCase().indexOf(filterDate) > -1;
+        var idMatch = li[i].dataset.id.toUpperCase().indexOf(filterID) > -1;
+        var prixTotaleMatch = li[i].dataset.prixTotale.toUpperCase().indexOf(filterPrixTotale) > -1;
+
+        if (produitMatch && fournisseurMatch && dateMatch && idMatch && prixTotaleMatch) {
+          li[i].style.display = '';
+        } else {
+          li[i].style.display = 'none';
+        }
+      }
+    }
+  </script>
+{% endblock %}
+</body>
+</html>

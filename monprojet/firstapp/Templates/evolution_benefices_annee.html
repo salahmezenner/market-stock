@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Évolution des bénéfices</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Évolution des bénéfices pour l'année {{ annee }}</h1>
+    <canvas id="evolutionChart" width="600" height="200"></canvas>
+
+    <script>
+        var moisLabels = JSON.parse('{{ mois_labels_json|safe }}');
+        var beneficesEvolution = JSON.parse('{{ benefices_evolution_json|safe }}');
+
+        var ctx = document.getElementById('evolutionChart').getContext('2d');
+        var evolutionChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: moisLabels,
+                datasets: [{
+                    label: 'Total des bénéfices',
+                    data: beneficesEvolution,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

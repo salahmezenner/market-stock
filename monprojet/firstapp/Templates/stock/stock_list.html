@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@300&family=Dosis:wght@300&family=Forum&family=Parisienne&display=swap"
+    rel="stylesheet"
+  />
+
+    <title>Ma Liste d'Achats</title>
+    <style>
+        body {
+          position: absolute;
+   top: 10%;
+   left: 43%;
+   font-size: 23px;
+   font-family: 'Cormorant Upright', serif;  
+   background-color: #faf0e6;
+     color: white;
+     box-sizing:border-box;
+     margin: 0%; padding: 0;
+ transition:all 0.5s cubic-bezier(.43,1.1,.62,1.08);
+ text-transform: capitalize;
+        }
+   
+        .container {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); 
+        }
+
+        h2 { 
+          font-weight: bold;
+              color: #495057;
+              box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+         
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            color: #495057;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3); 
+            font-weight: bold;
+        }
+
+        input {
+            padding: 10px;
+            margin: 7px 2px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        li {
+            border: 1px solid #dee2e6;
+            margin-top: -1px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            text-decoration: none;
+            font-size: 16px;
+            color: #495057;
+            display: block;
+            transition: 0.3s;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        li:hover {
+            background-color: #e9ecef;
+        }
+
+        
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-create {
+            background-color: #c2a789; 
+            color: #fff;
+            padding: 12px 20px;
+            font-size: 20px;
+            border: none;
+            position: relative;
+            left: 45px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-family: 'Cormorant Upright', serif; 
+        }
+
+        .btn-create:hover {
+           
+            font-family: 'Cormorant Upright', serif; 
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+
+        }
+    </style>
+</head> 
+<body>
+{% block content %}
+  <h2>Liste des stocks</h2> <br>
+  <label for="filterNom">Filtrer par nom:</label>
+  <input type="text" id="filterNom" onkeyup="filterStocks()" placeholder="Entrez le nom du produit">
+  <br>
+  <label for="filterQuantite">Filtrer par quantité:</label>
+  <input type="number" id="filterQuantite" onkeyup="filterStocks()" placeholder="Entrez la quantité">
+  <br>
+  <label for="filterPrixUnitaire">Filtrer par prix unitaire:</label>
+  <input type="number" id="filterPrixUnitaire" onkeyup="filterStocks()" placeholder="Entrez le prix unitaire">
+  <br>
+  <label for="filterPrixVente">Filtrer par prix de vente:</label>
+  <input type="number" id="filterPrixVente" onkeyup="filterStocks()" placeholder="Entrez le prix de vente">
+  <br>
+  <ul id="stockList">
+    {% for stock in stocks %}
+      <li data-nom="{{ stock.NomP }}" data-quantite="{{ stock.quantite }}" data-prix-vente="{{ stock.prixVente }}" data-prix-unitaire="{{ stock.prixUnitaire }}">
+        <a href="{% url 'stock_detail' CodeP=stock.CodeP %}">{{ stock.NomP }} - {{ stock.quantite }} - {{ stock.prixVente }} - {{ stock.prixUnitaire }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+
+   <a  class="btn-create" href="{% url 'stock_create' %}">Créer</a>
+
+  <script>
+    function filterStocks() {
+      var inputNom, inputQuantite, inputPrixUnitaire, inputPrixVente, filterNom, filterQuantite, filterPrixUnitaire, filterPrixVente, ul, li, a, i, txtValue;
+
+      inputNom = document.getElementById('filterNom');
+      inputQuantite = document.getElementById('filterQuantite');
+      inputPrixUnitaire = document.getElementById('filterPrixUnitaire');
+      inputPrixVente = document.getElementById('filterPrixVente');
+
+      filterNom = inputNom.value.toUpperCase();
+      filterQuantite = inputQuantite.value.toUpperCase();
+      filterPrixUnitaire = inputPrixUnitaire.value.toUpperCase();
+      filterPrixVente = inputPrixVente.value.toUpperCase();
+
+      ul = document.getElementById('stockList');
+      li = ul.getElementsByTagName('li');
+
+      for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName('a')[0];
+        txtValue = a.textContent || a.innerText;
+
+        var nomMatch = txtValue.toUpperCase().indexOf(filterNom) > -1;
+        var quantiteMatch = li[i].dataset.quantite.toUpperCase().indexOf(filterQuantite) > -1;
+        var prixUnitaireMatch = li[i].dataset.prixUnitaire.toUpperCase().indexOf(filterPrixUnitaire) > -1;
+        var prixVenteMatch = li[i].dataset.prixVente.toUpperCase().indexOf(filterPrixVente) > -1;
+
+        if (nomMatch && quantiteMatch && prixUnitaireMatch && prixVenteMatch) {
+          li[i].style.display = '';
+        } else {
+          li[i].style.display = 'none';
+        }
+      }
+    }
+  </script>
+{% endblock %}
+</body>
+</html>

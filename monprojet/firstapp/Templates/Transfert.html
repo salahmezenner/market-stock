@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Processus transfert</title>
+    {% load static %}
+</head>
+<body>
+    <div>
+        <h2>transfert</h2>
+        <form method="post" action="{% url 'faireTransfert' %}">
+            {% csrf_token %}
+            {{ transfert.as_p }}
+            <input type="submit" name="transfert" value="transfert">
+        </form>
+        
+    </div>
+</body>
+</html>
